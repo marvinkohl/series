@@ -31,5 +31,5 @@
 
 
 (defmethod perform ((op test-op) (c (eql (find-system :series-tests))))
-  (or (funcall (intern "DO-TESTS" (find-package "RT")))
+  (or (funcall (intern "DO-TESTS" (find-package "COMMON-LISP-USER")))
       (error "TEST-OP failed for SERIES-TESTS")))

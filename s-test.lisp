@@ -432,14 +432,16 @@
 (defmacro ton (form) `(test-opt-&-non-opt ',form))
 
 (defun test-opt-&-non-opt (form)
-  (loop (if test-file (return nil))
+  (loop
+    (if test-file (return nil))
     (format t "~%Type a string representing a pathname of a scratch disk file: ")
+    (finish-output)
     (setq test-file (read))
     (if (not (stringp test-file)) (setq test-file nil)))
   (let* ((non-opt (test-non-opt form))
-	 (opt (test-opt form)))
-   (if (equal non-opt opt) opt
-       (list "opt and non-opt disagree" opt non-opt))))
+         (opt (test-opt form)))
+    (if (equal non-opt opt) opt
+        (list "opt and non-opt disagree" opt non-opt))))
 
 (defmacro to (form) `(test-opt ',form))
 
@@ -2193,10 +2195,13 @@
 
 ;These test restriction violation checks
 
-(defok 492 (tr (let ((*print-length* 2) (x #Z(1 2 3 4 5)))
-		   (declare (special *print-length*))
-		   (collect x)))
+(defok 492
+    (let ((special-var))
+      (tr (let ((*print-length* 2) (x #Z(1 2 3 4 5)))
+            (declare (special special-var))
+            (collect x))))
   (1 2 3 4 5) 1)
+
 (defok 493 (tr (let ((*print-length* 2) (x #Z(1 2 3 4 5)))
 		   (declare (off-line-port 2))
 		   (collect x)))
